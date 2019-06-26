@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role'
     ];
 
     /**
@@ -36,4 +36,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function project()
+    {
+        return $this->hasMany('App\Project');
+    }
+
+    public function accessibleProjects()
+    {
+        return Project::where('user_id', $this->id)
+        ->orWhereHas('members', function ($query) {
+            $query->where('user_id', $this->id);
+        })
+        ->get();
+       
+        //trả về tất cả project mà user create hoặc được share
+    }
 }

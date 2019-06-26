@@ -14,3 +14,15 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::group(['middleware'=>'auth'], function(){
+    Route::resource('/projects', 'ProjectController');
+    Route::post('/projects/{project}/tasks', 'TaskController@storeTask');
+    Route::patch('/projects/{project}/tasks/{task}', 'TaskController@updateTask');
+    Route::post('/projects/{project}/invitations', 'ProjectInvitationsController@store');
+});
+
+
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
