@@ -45,8 +45,27 @@ class ProjectController extends Controller
             'body' => 'required',
         ]);
 
-        auth()->user()->project()->create($data);
-        return redirect('/projects');
+       $project = auth()->user()->project()->create($data);
+
+        if(request('tasks')) {
+            foreach (request('tasks') as $task) {
+                if($task['body']) {
+                    $project->addTask($task['body']);
+                } else {};
+                 //để tránh trường hợp body = "" nhưng lại create task 
+                 //lúc này bị lỗi bên trong và không execute đoạn code bên dưới
+            }
+        }
+       
+        
+        //return về view show khi send req từ Vue
+        if(request()->wantsJson()) {
+            return ['message' => '/projects/'. $project->id];
+        }
+
+
+
+     return redirect('/projects');
     }
 
     /**

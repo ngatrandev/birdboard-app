@@ -13,11 +13,11 @@ class TaskController extends Controller
     {
         $this->authorize('manage', $project);
         
-        $data = request()->validate([
+        request()->validate([
             'body'=>'required'
         ], ['The task field is required.']);
 
-        $project->task()->create($data);
+        $project->addTask(request('body'));
 
         return redirect()->route('projects.show', $project->id);
     }

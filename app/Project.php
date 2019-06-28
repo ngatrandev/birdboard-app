@@ -34,4 +34,8 @@ class Project extends Model
         $this->members()->attach($user);
     }
 
+    public function addTask($body)
+    {
+        return $this->task()->create(['body'=> $body]);
+    }
 }

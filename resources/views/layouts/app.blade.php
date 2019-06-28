@@ -25,7 +25,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="theme-dark bg-page section">
+<body class="theme-light bg-page section">
     <div id="app">
         <nav class="bg-header -mx-4">
             <div class="container mx-4">
