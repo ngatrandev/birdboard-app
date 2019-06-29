@@ -11,10 +11,10 @@
                             type="text"
                             id="title"
                             class="border p-2 text-xs block w-full rounded"
-                            :class="errors.title ? 'border-alert':'border-muted-light'"
+                            :class="form.errors.title ? 'border-alert':'border-muted-light'"
                             v-model="form.title">
 
-                        <span class="text-xs text-alert italic" v-if="errors.title" v-text="errors.title[0]"></span>
+                        <span class="text-xs text-alert italic" v-if="form.errors.title" v-text="form.errors.title[0]"></span>
                     </div>
 
                     <div class="mb-4">
@@ -23,11 +23,11 @@
                         <textarea
                             id="body"
                             class="border border-muted-light p-2 text-xs block w-full rounded"
-                            :class="errors.body ? 'border-alert':'border-muted-light'"
+                            :class="form.errors.body ? 'border-alert':'border-muted-light'"
                             rows="7"
                             v-model="form.body"
                         ></textarea>
-                        <span class="text-xs text-alert italic" v-if="errors.body" v-text="errors.body[0]"></span>
+                        <span class="text-xs text-alert italic" v-if="form.errors.body" v-text="form.errors.body[0]"></span>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
                         <input
                             type="text"
                             class="border border-muted-light mb-2 p-2 text-xs block w-full rounded mb-2"
-                            placeholder="Task 1" 
+                            placeholder="Task" 
                             v-for="task in form.tasks"
                             v-model="task.body">
                     </div>
@@ -63,21 +63,18 @@
 </template>
 
 <script>
+import BirdboardForm from './BirdboardForm';
 export default {
     data () {
     //Các giá trị trên template phải được khai ở data()
         return {
-            
-            form: {
+            form: new BirdboardForm ({
                 title: '',
                 body: '',
                 tasks: [
                     {body: ''},
                     ]
-            },
-
-            errors: {}
-            
+            })
         };
     },
 
@@ -87,11 +84,14 @@ export default {
         },
 
        async submit() {
-           try {
-                location = (await axios.post('/projects', this.form)).data.message;
-           } catch (error) {
-               this.errors = error.response.data.errors;
-           }
+           
+           this.form.submit('/projects')
+           .then(response=>location = response.data.message);
+        //    try {
+        //         location = (await axios.post('/projects', this.form)).data.message;
+        //    } catch (error) {
+        //        this.errors = error.response.data.errors;
+        //    }
             
         }
     }
