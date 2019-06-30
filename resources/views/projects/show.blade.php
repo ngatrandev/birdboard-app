@@ -11,7 +11,7 @@
                 <img src="https://gravatar.com/avatar/{{md5($member->email)}}?s=60" alt="{{$member->name}}'s avatar" class="rounded-full w-8 mr-2">   
             @endforeach
                 <img src="https://gravatar.com/avatar/{{md5($project->user->email)}}?s=60" alt="{{$project->user->name}}'s avatar" class="rounded-full w-8 mr-2">
-                <a href="/projects/{{$project->id}}/edit" class="button ml-4">Edit Project</a>
+                <a href="" class="button ml-4" @click.prevent="$modal.show('edit-project')">Edit Project</a>
         </div>
         
     </div>
@@ -85,6 +85,8 @@
     </div>
    
 </main>
+<update-project-modal id="{{$project->id}}"  oldtitle = "{{$project->title}}" oldbody="{{$project->body}}"></update-project-modal>
+{{-- đây là các props pass qua file vue --}}
 
 @endsection
 

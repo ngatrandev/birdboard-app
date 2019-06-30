@@ -10,7 +10,7 @@
             @elseif($activity->description === 'updated')
                 {{-- Lưu ý cách viết as $key=>$value --}}
                 @foreach($activity->changes['after'] as $key =>$value)
-                    <p>
+                    <p class="{{$loop->last ? '': 'pb-2'}}">
                         {{$activity->user->name}} updated {{$key}}:
                         <span class="text-blue-dark">"{{$value}}"</span> 
                         <span class="text-muted">{{$activity->created_at->diffForHumans()}}</span>

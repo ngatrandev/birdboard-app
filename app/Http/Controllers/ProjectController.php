@@ -119,6 +119,14 @@ class ProjectController extends Controller
             'body' => 'required',
         ]);
 
+        if(!request('notes')) {
+            $project->update(request(['title', 'body']));
+        }
+
+        if(request()->wantsJson()) {
+            return ['message' => '/projects/'. $project->id];
+        }
+
         $project->update(request(['title', 'body', 'notes']));
         //khi update dùng chung 1 method trong controller dù notes ở form khác với (title+body)
 
