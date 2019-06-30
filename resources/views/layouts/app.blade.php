@@ -53,21 +53,29 @@
                         <div class="flex items-center ml-auto">
                             <!-- Authentication Links -->
                             @guest
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="text-accent no-underline hover:text-alert mr-2" href="{{ route('login') }}">{{__('Login')}}</a>
                                 @if (Route::has('register'))
 
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="text-accent no-underline hover:text-alert" href="{{ route('register') }}">{{__('Register')}}</a>
 
                                 @endif
                             @else
                             {{-- <theme-switcher></theme-switcher> --}}
-                                <a  
-                                    class="flex items-center text-default no-underline text-sm" 
-                                    href="#" 
-                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        <img src="https://gravatar.com/avatar/{{md5(Auth::user()->email)}}?s=60" alt="{{Auth::user()->name}}'s avatar" class="rounded-full mr-3" width="35">  <span class="caret"></span>
-                                {{auth()->user()->name}}
-                                </a>
+                                <dropdown align=right width="200px">
+                                    <template v-slot:trigger>
+                                        <button  
+                                            class="flex items-center text-default no-underline text-sm focus:outline-none" 
+                                            v-pre>
+                                            <img src="https://gravatar.com/avatar/{{md5(Auth::user()->email)}}?s=60" alt="{{Auth::user()->name}}'s avatar" class="rounded-full mr-3" width="35">  <span class="caret"></span>
+                                            {{auth()->user()->name}}
+                                        </button>
+                                    </template>
+                                    <form action="/logout" method="POST">
+                                        @csrf
+                                        <button type="submit" class="dropdown-menu-link w-full text-left">Logout</button>
+                                    </form>
+                                </dropdown>
+                                
                          
                             @endguest
                         </div>
