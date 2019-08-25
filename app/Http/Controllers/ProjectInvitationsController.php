@@ -16,6 +16,11 @@ class ProjectInvitationsController extends Controller
 
         $project->invite($user);
 
+        if(request()->wantsJson()) {
+            return ['message' => '/projects/'. $project->id];
+        }
+
+
         return redirect()->route('projects.show', $project->id)->with('autofocus', true);
     }
 }

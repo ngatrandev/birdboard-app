@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Project;
 use Illuminate\Http\Request;
 use App\Activity;
+use App\User;
 
 class ProjectController extends Controller
 {
@@ -86,7 +87,19 @@ class ProjectController extends Controller
             $this->authorize('update',$project);
 
         $activities = Activity::whereProjectId($project->id)->latest()->get();
-        return view('projects.show', compact('project', 'activities'));
+
+        $userColl1 = $project->user()->get();//user tạo project
+        $userColl2 = $project->members;//user được invite vào project
+        $joinedEmails = $userColl1->merge($userColl2)->pluck('email');
+        //tạo 1 array email từ các user dùng pluck() rất đơn giản
+
+        $allUsers = User::all();
+        $allEmails = $allUsers->pluck('email');
+        
+        
+        
+    
+        return view('projects.show', compact('project', 'activities', 'joinedEmails', 'allEmails'));
     }
 
     /**

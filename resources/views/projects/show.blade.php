@@ -12,6 +12,11 @@
             @endforeach
                 <img src="https://gravatar.com/avatar/{{md5($project->user->email)}}?s=60" alt="{{$project->user->name}}'s avatar" class="rounded-full w-8 mr-2">
                 <a href="" class="button ml-4" @click.prevent="$modal.show('edit-project')">Edit Project</a>
+                @can('manage', $project) 
+                {{-- dùng can check policy 'manage' --}}
+                    <a href="" class="button ml-4" @click.prevent="$modal.show('invite-card')">Invite friends</a>
+                @endcan
+                
         </div>
         
     </div>
@@ -77,17 +82,16 @@
         <div class="lg:w-1/4 px-3 lg:py-8">
             @include('projects.card')
             @include('projects.activity_card')
-            @can('manage', $project) 
-            {{-- dùng can check policy 'manage' --}}
-                @include('projects.invite_card')
-            @endcan
+            
         </div>
     </div>
-   
+
 </main>
 <update-project-modal id="{{$project->id}}"  oldtitle = "{{$project->title}}" oldbody="{{$project->body}}"></update-project-modal>
-{{-- đây là các props pass qua file vue --}}
-
+{{-- đây là các props pass qua file vue nếu thiếu dấu : phía trước collection
+    thì array chỉ được hiểu là string
+    các props còn lại nếu có dấu : phía trước sẽ bị lỗi--}}
+<invite-card id="{{$project->id}}" :allemail="{{$allEmails}}" :invalidemail={{$joinedEmails}}></invite-card>
 @endsection
 
 @section('scripts')

@@ -27,6 +27,7 @@ Vue.component('theme-switcher', require('./components/ThemeSwitcher.vue').defaul
 Vue.component('new-project-modal', require('./components/NewProjectModal.vue').default);
 Vue.component('update-project-modal', require('./components/UpdateProjectModal.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
+Vue.component('invite-card', require('./components/InviteCardModal.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
