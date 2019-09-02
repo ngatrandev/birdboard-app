@@ -28,11 +28,16 @@ Vue.component('new-project-modal', require('./components/NewProjectModal.vue').d
 Vue.component('update-project-modal', require('./components/UpdateProjectModal.vue').default);
 Vue.component('dropdown', require('./components/Dropdown.vue').default);
 Vue.component('invite-card', require('./components/InviteCardModal.vue').default);
+Vue.component('project-dropdown', require('./components/ProjectDropdown.vue').default);
+Vue.component('info-dropdown', require('./components/InfoDropdown.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+import PortalVue from 'portal-vue'
+Vue.use(PortalVue)
+//để dùng PortalVue
 
 const app = new Vue({
     el: '#app',

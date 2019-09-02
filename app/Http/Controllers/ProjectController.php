@@ -6,6 +6,7 @@ use App\Project;
 use Illuminate\Http\Request;
 use App\Activity;
 use App\User;
+use Illuminate\Support\Arr;
 
 class ProjectController extends Controller
 {
@@ -16,9 +17,15 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
         $projects = auth()->user()->accessibleProjects();
-        return view('projects.index', compact('projects'));
+        $ownProject = auth()->user()->project()->pluck('title', 'id');
+        //khi pluck cặp giá trị (key-value)
+        //giá trị 1 là value (title), giá trị 2 là key (id)
+        $shareProject = auth()->user()->shareProjects()->pluck('title', 'id');
+        $ownProjectCount = $ownProject ->count();//đếm số lượng project
+        $shareProjectCount = $shareProject ->count();
+        return view('projects.index', compact('projects', 'ownProject', 'shareProject', 'user', 'ownProjectCount', 'shareProjectCount'));
     }
 
     /**

@@ -52,4 +52,14 @@ class User extends Authenticatable
        
         //trả về tất cả project mà user create hoặc được share
     }
+
+    public function shareProjects()
+    {
+        return Project::WhereHas('members', function ($query) {
+            $query->where('user_id', $this->id);
+        })
+        ->get();
+       
+        //trả về tất cả project mà user được share
+    }
 }
