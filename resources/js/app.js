@@ -30,6 +30,8 @@ Vue.component('dropdown', require('./components/Dropdown.vue').default);
 Vue.component('invite-card', require('./components/InviteCardModal.vue').default);
 Vue.component('project-dropdown', require('./components/ProjectDropdown.vue').default);
 Vue.component('info-dropdown', require('./components/InfoDropdown.vue').default);
+Vue.component('accordion-project', require('./components/AccordionProject.vue').default);
+Vue.component('accordion-item', require('./components/AccordionItem.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

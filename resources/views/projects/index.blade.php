@@ -7,6 +7,7 @@
     <div class="flex w-1/2 justify-start">
        <project-dropdown :value1="{{$ownProject}}" :value2="{{$shareProject}}"></project-dropdown>
        <info-dropdown :value1="{{$user}}" value2="{{$ownProjectCount}}" value3="{{$shareProjectCount}}"></info-dropdown>
+       <a class="text-muted text-base font-light mb-3 py-4 px-2 no-underline hover:text-alert" href="/accordion">Accordion</a>
     </div>
     <div class="flex w-1/2 justify-end">
          <a href="" class="button mb-5" @click.prevent="$modal.show('new-project')">New Project</a>
