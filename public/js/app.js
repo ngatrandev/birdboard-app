@@ -1941,6 +1941,54 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConditionalButton.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConditionalButton.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var in_viewport__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! in-viewport */ "./node_modules/in-viewport/in-viewport.js");
+/* harmony import */ var in_viewport__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(in_viewport__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      isActive: false
+    };
+  },
+  mounted: function mounted() {
+    window.addEventListener('scroll', this.checkDisplay, {
+      passive: true
+    }); //passive event listeners can great improve scrolling performance
+  },
+  methods: {
+    checkDisplay: function checkDisplay() {
+      this.isActive = !in_viewport__WEBPACK_IMPORTED_MODULE_0___default()(document.getElementById('button1'));
+    }
+  } // khi dùng position fixed cho 1 đối tượng phải đi kèm vị trí đê nó xuất hiện (vd pin-l, top...)
+  // nếu không có các giá trị về vị trí đối tượng này không hiển thị
+  // in-viewport là 1 package để xác định 1 đối tượng có hiển thị trên màn hình hay không khi ta scrolling
+  // in-viewport có thể trả về boolean tương ứng với đối tượng đó có đang show trên màn hình(viewport)?
+  // từ đó ta viết func để đối tượng này xuất hiện khi đối tượng kia mất đi
+  // hoặc func chỉ chạy khi scroll đến đối tượng đó
+
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Dropdown.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Dropdown.vue?vue&type=script&lang=js& ***!
@@ -2560,6 +2608,299 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }()
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/in-viewport/in-viewport.js":
+/*!*************************************************!*\
+  !*** ./node_modules/in-viewport/in-viewport.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = inViewport;
+
+var instances = [];
+var supportsMutationObserver = typeof global.MutationObserver === 'function';
+
+function inViewport(elt, params, cb) {
+  var opts = {
+    container: global.document.body,
+    offset: 0,
+    debounce: 15,
+    failsafe: 150
+  };
+
+  if (params === undefined || typeof params === 'function') {
+    cb = params;
+    params = {};
+  }
+
+  var container = opts.container = params.container || opts.container;
+  var offset = opts.offset = params.offset || opts.offset;
+  var debounceValue = opts.debounce = params.debounce || opts.debounce;
+  var failsafe = opts.failsafe = params.failsafe || opts.failsafe;
+
+  // ensure backward compatibility with failsafe as boolean
+  if (failsafe === true) {
+    failsafe = 150;
+  } else if(failsafe === false) {
+    failsafe = 0;
+  }
+
+  // failsafe check always needs to be higher than debounceValue
+  if (failsafe > 0 && failsafe < debounceValue) {
+      failsafe = debounceValue + 50;
+  }
+
+  for (var i = 0; i < instances.length; i++) {
+    if (
+      instances[i].container === container &&
+      instances[i]._debounce === debounceValue &&
+      instances[i]._failsafe === failsafe
+    ) {
+      return instances[i].isInViewport(elt, offset, cb);
+    }
+  }
+
+  return instances[
+    instances.push(createInViewport(container, debounceValue, failsafe)) - 1
+  ].isInViewport(elt, offset, cb);
+}
+
+function addEvent(el, type, fn) {
+  if (el.attachEvent) {
+    el.attachEvent('on' + type, fn);
+  } else {
+    el.addEventListener(type, fn, false);
+  }
+}
+
+function debounce(func, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this, args = arguments;
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+
+    function later() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    }
+  };
+}
+
+// https://github.com/jquery/sizzle/blob/3136f48b90e3edc84cbaaa6f6f7734ef03775a07/sizzle.js#L708
+var contains = function() {
+  if (!global.document) {
+    return true;
+  }
+  return global.document.documentElement.compareDocumentPosition ?
+    function (a, b) {
+      return !!(a.compareDocumentPosition(b) & 16);
+    } :
+    global.document.documentElement.contains ?
+      function (a, b) {
+        return a !== b && ( a.contains ? a.contains(b) : false );
+      } :
+      function (a, b) {
+        while (b = b.parentNode) {
+          if (b === a) {
+            return true;
+          }
+        }
+        return false;
+      };
+}
+
+function createInViewport(container, debounceValue, failsafe) {
+  var watches = createWatches();
+
+  var scrollContainer = container === global.document.body ? global : container;
+  var debouncedCheck = debounce(watches.checkAll(watchInViewport), debounceValue);
+
+  addEvent(scrollContainer, 'scroll', debouncedCheck);
+
+  if (scrollContainer === global) {
+    addEvent(global, 'resize', debouncedCheck);
+  }
+
+  if (supportsMutationObserver) {
+    observeDOM(watches, container, debouncedCheck);
+  }
+
+  // failsafe check, every X we check for visible images
+  // usecase: a hidden parent containing eleements
+  // when the parent becomes visible, we have no event that the children
+  // became visible
+  if (failsafe > 0) {
+    setInterval(debouncedCheck, failsafe);
+  }
+
+  function isInViewport(elt, offset, cb) {
+    if (!cb) {
+      return isVisible(elt, offset);
+    }
+
+    var remote = createRemote(elt, offset, cb);
+    remote.watch();
+    return remote;
+  }
+
+  function createRemote(elt, offset, cb) {
+    function watch() {
+      watches.add(elt, offset, cb);
+    }
+
+    function dispose() {
+      watches.remove(elt);
+    }
+
+    return {
+      watch: watch,
+      dispose: dispose
+    };
+  }
+
+  function watchInViewport(elt, offset, cb) {
+    if (isVisible(elt, offset)) {
+      watches.remove(elt);
+      cb(elt);
+    }
+  }
+
+  function isVisible(elt, offset) {
+    if (!elt) {
+      return false;
+    }
+
+    if (!contains(global.document.documentElement, elt) || !contains(global.document.documentElement, container)) {
+      return false;
+    }
+
+    // Check if the element is visible
+    // https://github.com/jquery/jquery/blob/740e190223d19a114d5373758127285d14d6b71e/src/css/hiddenVisibleSelectors.js
+    if (!elt.offsetWidth || !elt.offsetHeight) {
+      return false;
+    }
+
+    var eltRect = elt.getBoundingClientRect();
+    var viewport = {};
+
+    if (container === global.document.body) {
+      viewport = {
+        top: -offset,
+        left: -offset,
+        right: global.document.documentElement.clientWidth + offset,
+        bottom: global.document.documentElement.clientHeight + offset
+      };
+    } else {
+      var containerRect = container.getBoundingClientRect();
+      viewport = {
+        top: containerRect.top - offset,
+        left: containerRect.left - offset,
+        right: containerRect.right + offset,
+        bottom: containerRect.bottom + offset
+      };
+    }
+
+    // The element must overlap with the visible part of the viewport
+    var visible =
+      (
+        eltRect.right >= viewport.left &&
+        eltRect.left <= viewport.right &&
+        eltRect.bottom >= viewport.top &&
+        eltRect.top <= viewport.bottom
+      );
+
+    return visible;
+  }
+
+  return {
+    container: container,
+    isInViewport: isInViewport,
+    _debounce: debounceValue,
+    _failsafe: failsafe
+  };
+}
+
+function createWatches() {
+  var watches = [];
+
+  function add(elt, offset, cb) {
+    if (!isWatched(elt)) {
+      watches.push([elt, offset, cb]);
+    }
+  }
+
+  function remove(elt) {
+    var pos = indexOf(elt);
+    if (pos !== -1) {
+      watches.splice(pos, 1);
+    }
+  }
+
+  function indexOf(elt) {
+    for (var i = watches.length - 1; i >= 0; i--) {
+      if (watches[i][0] === elt) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  function isWatched(elt) {
+    return indexOf(elt) !== -1;
+  }
+
+  function checkAll(cb) {
+    return function () {
+      for (var i = watches.length - 1; i >= 0; i--) {
+        cb.apply(this, watches[i]);
+      }
+    };
+  }
+
+  return {
+    add: add,
+    remove: remove,
+    isWatched: isWatched,
+    checkAll: checkAll
+  };
+}
+
+function observeDOM(watches, container, cb) {
+  var observer = new MutationObserver(watch);
+  var filter = Array.prototype.filter;
+  var concat = Array.prototype.concat;
+
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+    // changes like style/width/height/display will be catched
+    attributes: true
+  });
+
+  function watch(mutations) {
+    // some new DOM nodes where previously watched
+    // we should check their positions
+    if (mutations.some(knownNodes) === true) {
+      setTimeout(cb, 0);
+    }
+  }
+
+  function knownNodes(mutation) {
+    var nodes = concat.call([],
+      Array.prototype.slice.call(mutation.addedNodes),
+      mutation.target
+    );
+    return filter.call(nodes, watches.isWatched).length > 0;
+  }
+}
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -4549,6 +4890,66 @@ var render = function() {
       })
     }),
     1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConditionalButton.vue?vue&type=template&id=3340967d&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ConditionalButton.vue?vue&type=template&id=3340967d& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.isActive,
+          expression: "isActive"
+        }
+      ],
+      staticClass: "fixed pin-b pin-r z-10 ",
+      on: {
+        click: function($event) {
+          return _vm.$modal.show("new-project")
+        }
+      }
+    },
+    [
+      _c(
+        "svg",
+        {
+          staticClass:
+            "fill-current text-accent w-12 h-12 leading-none cursor-pointer items-center",
+          attrs: { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20" }
+        },
+        [
+          _c("path", {
+            attrs: {
+              d:
+                "M11 9V5H9v4H5v2h4v4h2v-4h4V9h-4zm-1 11a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"
+            }
+          })
+        ]
+      )
+    ]
   )
 }
 var staticRenderFns = []
@@ -17670,6 +18071,7 @@ Vue.component('project-dropdown', __webpack_require__(/*! ./components/ProjectDr
 Vue.component('info-dropdown', __webpack_require__(/*! ./components/InfoDropdown.vue */ "./resources/js/components/InfoDropdown.vue")["default"]);
 Vue.component('accordion-project', __webpack_require__(/*! ./components/AccordionProject.vue */ "./resources/js/components/AccordionProject.vue")["default"]);
 Vue.component('accordion-item', __webpack_require__(/*! ./components/AccordionItem.vue */ "./resources/js/components/AccordionItem.vue")["default"]);
+Vue.component('conditional-button', __webpack_require__(/*! ./components/ConditionalButton.vue */ "./resources/js/components/ConditionalButton.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -17954,6 +18356,75 @@ function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (BirdboardForm);
+
+/***/ }),
+
+/***/ "./resources/js/components/ConditionalButton.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/ConditionalButton.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ConditionalButton_vue_vue_type_template_id_3340967d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConditionalButton.vue?vue&type=template&id=3340967d& */ "./resources/js/components/ConditionalButton.vue?vue&type=template&id=3340967d&");
+/* harmony import */ var _ConditionalButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ConditionalButton.vue?vue&type=script&lang=js& */ "./resources/js/components/ConditionalButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ConditionalButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ConditionalButton_vue_vue_type_template_id_3340967d___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ConditionalButton_vue_vue_type_template_id_3340967d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ConditionalButton.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ConditionalButton.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/ConditionalButton.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConditionalButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ConditionalButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConditionalButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ConditionalButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ConditionalButton.vue?vue&type=template&id=3340967d&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/ConditionalButton.vue?vue&type=template&id=3340967d& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConditionalButton_vue_vue_type_template_id_3340967d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ConditionalButton.vue?vue&type=template&id=3340967d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ConditionalButton.vue?vue&type=template&id=3340967d&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConditionalButton_vue_vue_type_template_id_3340967d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConditionalButton_vue_vue_type_template_id_3340967d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

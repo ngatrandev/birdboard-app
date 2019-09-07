@@ -32,6 +32,7 @@ Vue.component('project-dropdown', require('./components/ProjectDropdown.vue').de
 Vue.component('info-dropdown', require('./components/InfoDropdown.vue').default);
 Vue.component('accordion-project', require('./components/AccordionProject.vue').default);
 Vue.component('accordion-item', require('./components/AccordionItem.vue').default);
+Vue.component('conditional-button', require('./components/ConditionalButton.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

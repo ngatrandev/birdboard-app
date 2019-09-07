@@ -9,8 +9,8 @@
        <info-dropdown :value1="{{$user}}" value2="{{$ownProjectCount}}" value3="{{$shareProjectCount}}"></info-dropdown>
        <a class="text-muted text-base font-light mb-3 py-4 px-2 no-underline hover:text-alert" href="/accordion">Accordion</a>
     </div>
-    <div class="flex w-1/2 justify-end">
-         <a href="" class="button mb-5" @click.prevent="$modal.show('new-project')">New Project</a>
+    <div  class="flex w-1/2 justify-end">
+         <a id="button1" href="" class="button mb-5" @click.prevent="$modal.show('new-project')">New Project</a>
      </div>
 </header>
 <portal-target name="project-list"></portal-target>
@@ -47,6 +47,11 @@
 </main>
 
 <new-project-modal></new-project-modal>
+
+<conditional-button></conditional-button>
+<!-- Nút này sẽ xuất hiện khi nút New Project bị scroll mất -->  
+
+
 
 
 @endsection
